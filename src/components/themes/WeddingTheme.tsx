@@ -26,32 +26,26 @@ const DUMMY_ALBUMS = [
 // Accent dark: #1F1C1D
 
 // ===== Decorative Divider Component =====
-function FloralDivider({ flip = false }: { flip?: boolean }) {
+function FloralDivider() {
   return (
-    <div className={`w-full overflow-hidden ${flip ? 'rotate-180' : ''}`} style={{ height: '60px' }}>
-      <svg viewBox="0 0 1200 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" preserveAspectRatio="none">
-        {/* Curved wave */}
-        <path d="M0 60 C300 60 300 0 600 0 C900 0 900 60 1200 60 L1200 60 L0 60 Z" fill="#FFFFFF" fillOpacity="0.6" />
-        <path d="M0 60 C300 55 350 10 600 10 C850 10 900 55 1200 60 L1200 60 L0 60 Z" fill="#F5F5F5" fillOpacity="0.4" />
-        {/* Ornamental dots */}
-        <circle cx="600" cy="30" r="4" fill="#D2D2D2" />
-        <circle cx="570" cy="32" r="2" fill="#D2D2D2" opacity="0.6" />
-        <circle cx="630" cy="32" r="2" fill="#D2D2D2" opacity="0.6" />
-        <circle cx="545" cy="36" r="1.5" fill="#D2D2D2" opacity="0.4" />
-        <circle cx="655" cy="36" r="1.5" fill="#D2D2D2" opacity="0.4" />
-      </svg>
+    <div className="relative w-full py-6 flex items-center justify-center">
+      <div className="flex items-center gap-4">
+        <div className="h-px w-16 md:w-24" style={{ background: 'linear-gradient(to right, transparent, rgba(180,180,180,0.3))' }} />
+        <span style={{ color: 'rgba(150,150,150,0.35)', fontSize: '14px' }}>❦</span>
+        <div className="h-px w-16 md:w-24" style={{ background: 'linear-gradient(to left, transparent, rgba(180,180,180,0.3))' }} />
+      </div>
     </div>
   );
 }
 
 function OrnamentalBorder() {
   return (
-    <div className="flex items-center justify-center gap-2 py-6">
-      <div className="h-px w-16" style={{ background: 'linear-gradient(to right, transparent, #D2D2D2)' }} />
-      <span style={{ color: '#D2D2D2' }}>✦</span>
-      <span style={{ color: '#636262' }}>❧</span>
-      <span style={{ color: '#D2D2D2' }}>✦</span>
-      <div className="h-px w-16" style={{ background: 'linear-gradient(to left, transparent, #D2D2D2)' }} />
+    <div className="flex items-center justify-center gap-3 py-6">
+      <div className="h-px w-10" style={{ background: 'linear-gradient(to right, transparent, rgba(180,180,180,0.3))' }} />
+      <span style={{ color: 'rgba(150,150,150,0.3)', fontSize: '12px' }}>✦</span>
+      <span style={{ color: 'rgba(130,130,130,0.35)', fontSize: '14px' }}>❦</span>
+      <span style={{ color: 'rgba(150,150,150,0.3)', fontSize: '12px' }}>✦</span>
+      <div className="h-px w-10" style={{ background: 'linear-gradient(to left, transparent, rgba(180,180,180,0.3))' }} />
     </div>
   );
 }
@@ -287,10 +281,10 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
           <section
             id="pembukaan"
             className="min-h-screen flex items-center justify-center py-28 px-4 relative z-10"
-            style={{ backgroundColor: '#F5F5F5' }}
+            style={{ backgroundColor: '#F0F0F0' }}
           >
             {/* Subtle pattern overlay */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #1F1C1D 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #1F1C1D 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
             <div className="relative z-10 max-w-3xl mx-auto text-center">
               <div className="text-3xl mb-3" style={{ color: '#636262' }}>﷽</div>
               <p className="text-base tracking-[0.3em] uppercase mb-2 font-medium" style={{ color: '#636262' }}>— Bismillahirrahmanirrahim —</p>
@@ -350,7 +344,7 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
           <section
             id="mempelai"
             className="min-h-screen flex items-center justify-center py-28 px-4 relative z-10"
-            style={{ backgroundColor: '#FFFFFF' }}
+            style={{ backgroundColor: '#F4F4F4' }}
           >
             {/* Corner ornaments */}
             <div className="absolute top-8 left-8 text-3xl opacity-10" style={{ color: '#636262' }}>❧</div>
@@ -414,17 +408,14 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
           </section>
 
           {/* Divider: Mempelai → Acara */}
-          <FloralDivider flip />
+          <FloralDivider />
 
           {/* ===== Section: Acara & Countdown ===== */}
           <section
             id="acara"
             className="min-h-screen flex items-center justify-center py-28 px-4 relative z-10"
-            style={{ backgroundColor: '#EDEDED' }}
+            style={{ backgroundColor: '#EBEBEB' }}
           >
-            {/* Decorative border frame */}
-            <div className="absolute inset-6 border border-dashed pointer-events-none rounded-3xl" style={{ borderColor: 'rgba(210,210,210,0.5)' }} />
-
             <div className="relative z-10 max-w-2xl mx-auto text-center">
               <div className="text-3xl mb-3" style={{ color: '#636262' }}>✿</div>
               <p className="text-base tracking-[0.3em] uppercase mb-2 font-medium" style={{ color: '#636262' }}>— Acara —</p>
@@ -492,7 +483,7 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
           {/* ===== Section: Love Story ===== */}
           {data.loveStory.length > 0 && (
             <>
-              <section className="py-28 px-4 relative z-10" style={{ backgroundColor: '#FFFFFF' }}>
+              <section className="py-28 px-4 relative z-10" style={{ backgroundColor: '#F2F2F2' }}>
                 {/* Subtle diagonal pattern */}
                 <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #1F1C1D 0, #1F1C1D 1px, transparent 0, transparent 50%)', backgroundSize: '20px 20px' }} />
 
@@ -544,7 +535,7 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
               </section>
 
               {/* Divider: Love Story → Gallery */}
-              <FloralDivider flip />
+              <FloralDivider />
             </>
           )}
 
@@ -552,7 +543,7 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
           <section
             id="galeri"
             className="py-28 px-4 relative z-10"
-            style={{ backgroundColor: '#EDEDED' }}
+            style={{ backgroundColor: '#EBEBEB' }}
           >
             <div className="relative z-10 max-w-5xl mx-auto">
               <div className="text-center mb-12">
@@ -591,7 +582,7 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
           <section
             id="ucapan"
             className="py-28 pb-36 px-4 relative z-10"
-            style={{ backgroundColor: '#F5F5F5' }}
+            style={{ backgroundColor: '#F0F0F0' }}
           >
             {/* Subtle pattern */}
             <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #1F1C1D 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
@@ -681,10 +672,10 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
           </section>
 
           {/* Divider: Ucapan → Penutup */}
-          <FloralDivider flip />
+          <FloralDivider />
 
           {/* ===== Section: Penutup ===== */}
-          <section className="py-28 px-4 relative z-10" style={{ backgroundColor: '#FFFFFF' }}>
+          <section className="py-28 px-4 relative z-10" style={{ backgroundColor: '#F2F2F2' }}>
             {/* Corner ornaments */}
             <div className="absolute top-8 left-8 text-3xl opacity-10" style={{ color: '#636262' }}>❧</div>
             <div className="absolute top-8 right-8 text-3xl opacity-10 scale-x-[-1]" style={{ color: '#636262' }}>❧</div>
