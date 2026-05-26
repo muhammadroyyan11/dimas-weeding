@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       message,
       attendance: attendance || 'Hadir',
       createdAt: new Date().toISOString(),
-      approved: false,
+      approved: true,
     });
     return NextResponse.json(newComment);
   } catch {

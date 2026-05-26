@@ -129,9 +129,7 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
   const [isMuted, setIsMuted] = useState(true);
   const [commentName, setCommentName] = useState('');
   const [commentMsg, setCommentMsg] = useState('');
-  const [commentList, setCommentList] = useState(
-    comments.filter(c => c.approved)
-  );
+  const [commentList, setCommentList] = useState(comments);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const coupleName = `${data.groom.nickname} & ${data.bride.nickname}`;
@@ -162,18 +160,33 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
     }
   };
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (!commentName.trim() || !commentMsg.trim()) return;
-    setCommentList(prev => [{
-      id: Date.now(),
-      name: commentName,
-      message: commentMsg,
-      attendance: 'Hadir',
-      createdAt: new Date().toISOString(),
-      approved: true,
-    }, ...prev]);
-    setCommentName('');
-    setCommentMsg('');
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: commentName, message: commentMsg, attendance: 'Hadir' }),
+      });
+      if (res.ok) {
+        const newComment = await res.json();
+        setCommentList(prev => [{ ...newComment, approved: true }, ...prev]);
+        setCommentName('');
+        setCommentMsg('');
+      }
+    } catch {
+      // Fallback: tambah ke state lokal saja
+      setCommentList(prev => [{
+        id: Date.now(),
+        name: commentName,
+        message: commentMsg,
+        attendance: 'Hadir',
+        createdAt: new Date().toISOString(),
+        approved: true,
+      }, ...prev]);
+      setCommentName('');
+      setCommentMsg('');
+    }
   };
 
   const scrollTo = useCallback((id: string) => {
@@ -635,12 +648,12 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
                 </form>
               </div>
 
-              {/* Comments List */}
-              <div className="space-y-4">
-                {commentList.slice(0, 20).map((c) => (
+              {/* Comments List - Scrollable */}
+              <div className="max-h-[400px] overflow-y-auto space-y-4 pr-2 scrollbar-thin" style={{ scrollbarWidth: 'thin', scrollbarColor: '#D2D2D2 transparent' }}>
+                {commentList.map((c) => (
                   <div
                     key={c.id}
-                    className="reveal opacity-0 translate-y-8 transition-all duration-700 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
+                    className="rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
                     style={{ backgroundColor: 'rgba(255,255,255,0.8)', border: '1px solid #E8E8E8' }}
                   >
                     <div className="flex items-center gap-3 mb-2">
