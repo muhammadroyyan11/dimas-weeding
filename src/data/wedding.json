@@ -1,0 +1,62 @@
+{
+  "groom": {
+    "name": "Dimas Prayuga Abdulrohman Putra",
+    "father": "Zuli Abdulrohman",
+    "mother": "Sri Rahayu",
+    "nickname": "Dimas"
+  },
+  "bride": {
+    "name": "Laely Nur Faizah",
+    "father": "Subiyadi",
+    "mother": "Marfuah",
+    "nickname": "Laely"
+  },
+  "reception": {
+    "date": "2026-06-08",
+    "time": "10:00 - 16:00 WIB",
+    "location": "Perum Sidorahayu Blok A No 1",
+    "address": "Dusun Niwen, Kelurahan Sidorahayu, Kecamatan Wagir, Kabupaten Malang",
+    "mapUrl": "https://maps.google.com/?q=Perum+Sidorahayu+Blok+A+No+1+Dusun+Niwen+Sidorahayu+Wagir+Malang",
+    "googleMapsEmbed": ""
+  },
+  "loveStory": [
+    {
+      "date": "2019",
+      "title": "Pertemuan Pertama",
+      "description": "Berawal dari sebuah acara pengajian di daerah Wagir, kami pertama kali bertemu. Tanpa sengaja duduk berdekatan dan mulai berbincang."
+    },
+    {
+      "date": "2020",
+      "title": "Mulai Dekat",
+      "description": "Pandemi membuat kami semakin sering berkomunikasi melalui telepon dan video call. Setiap hari menjadi lebih berwarna dengan kehadiran satu sama lain."
+    },
+    {
+      "date": "2022",
+      "title": "Lamaran",
+      "description": "Dengan restu kedua orang tua, kami resmi bertunangan. Sebuah ikatan suci yang menguatkan cinta kami."
+    },
+    {
+      "date": "8 Juni 2026",
+      "title": "Pernikahan",
+      "description": "Hari yang paling dinantikan. Dengan mengucap bismillah, kami akan melangkah ke jenjang pernikahan yang penuh berkah."
+    }
+  ],
+  "hero": {
+    "greeting": "Assalamu'alaikum Warahmatullahi Wabarakatuh",
+    "subtitle": "Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan resepsi pernikahan putra-putri kami:",
+    "date": "8 Juni 2026",
+    "footer": "Merupakan suatu kehormatan dan kebahagiaan apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kedua mempelai."
+  },
+  "colors": {
+    "primary": "#8B5E3C",
+    "secondary": "#D4A574",
+    "accent": "#F5E6D3",
+    "background": "#FFF8F0",
+    "text": "#3D2B1F",
+    "gold": "#C9A96E"
+  },
+  "music": {
+    "url": "",
+    "enabled": false
+  }
+}
