@@ -123,6 +123,23 @@ function CountdownTimer({ targetDate }: { targetDate: string }) {
   );
 }
 
+// ===== Helper: extract YouTube video ID =====
+function getYouTubeId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+function isYouTubeUrl(url: string): boolean {
+  return /youtu\.?be/.test(url);
+}
+
 // ===== Main Component =====
 export default function WeddingTheme({ data, comments, gallery, guestName }: ThemeProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -130,7 +147,15 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
   const [commentName, setCommentName] = useState('');
   const [commentMsg, setCommentMsg] = useState('');
   const [commentList, setCommentList] = useState(comments);
+  const [ytReady, setYtReady] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const ytPlayerRef = useRef<any>(null);
+  const ytContainerRef = useRef<HTMLDivElement>(null);
+  const pendingPlayRef = useRef(false);
+
+  const musicUrl = data.music.url || '';
+  const isYT = isYouTubeUrl(musicUrl);
+  const ytVideoId = isYT ? getYouTubeId(musicUrl) : null;
 
   const coupleName = `${data.groom.nickname} & ${data.bride.nickname}`;
   const coverImg = data.coverImage || DUMMY_COVER;
@@ -142,9 +167,78 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
 
   useReveal(isOpen);
 
-  const handleOpen = () => {
+  // Load YouTube IFrame API
+  useEffect(() => {
+    if (!isYT || !ytVideoId) return;
+
+    // Load API script if not already loaded
+    if (!(window as any).YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+    }
+
+    const initPlayer = () => {
+      if (ytContainerRef.current && (window as any).YT?.Player) {
+        ytPlayerRef.current = new (window as any).YT.Player(ytContainerRef.current, {
+          videoId: ytVideoId,
+          playerVars: { autoplay: 0, loop: 1, playlist: ytVideoId, controls: 0, playsinline: 1 },
+          events: {
+            onReady: () => {
+              setYtReady(true);
+              ytPlayerRef.current?.setVolume(30);
+              // Auto-play if user already opened the invitation
+              if (pendingPlayRef.current) {
+                ytPlayerRef.current?.playVideo();
+                setIsMuted(false);
+              }
+            },
+            onStateChange: (event: any) => {
+              // Loop when video ends
+              if (event.data === window.YT.PlayerState.ENDED) {
+                ytPlayerRef.current?.playVideo();
+              }
+            },
+          },
+        });
+      }
+    };
+
+    if ((window as any).YT?.Player) {
+      initPlayer();
+    } else {
+      (window as any).onYouTubeIframeAPIReady = initPlayer;
+    }
+
+    return () => {
+      setYtReady(false);
+      if (ytPlayerRef.current?.destroy) {
+        ytPlayerRef.current.destroy();
+        ytPlayerRef.current = null;
+      }
+    };
+  }, [isYT, ytVideoId]);
+
+  const playMusic = useCallback(() => {
+    if (isYT && ytPlayerRef.current?.playVideo) {
+      ytPlayerRef.current.playVideo();
+      setIsMuted(false);
+    } else if (!isYT && audioRef.current && musicUrl) {
+      audioRef.current.play().catch(() => {});
+    }
+  }, [isYT, musicUrl]);
+
+  const pauseMusic = useCallback(() => {
+    if (isYT && ytPlayerRef.current?.pauseVideo) {
+      ytPlayerRef.current.pauseVideo();
+      setIsMuted(true);
+    } else if (!isYT && audioRef.current) {
+      audioRef.current.pause();
+    }
+  }, [isYT]);
+
+  const handleOpen = useCallback(() => {
     setIsOpen(true);
-    setIsMuted(false);
 
     // Request fullscreen
     const el = document.documentElement;
@@ -154,22 +248,25 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
       (el as any).webkitRequestFullscreen();
     }
 
-    // Play music
-    if (audioRef.current && data.music.url) {
+    // Play music — jika player belum siap, pendingPlayRef akan trigger saat onReady
+    pendingPlayRef.current = true;
+    if (ytReady) {
+      playMusic();
+    } else if (!isYT && audioRef.current && musicUrl) {
+      // Audio biasa bisa langsung play
       audioRef.current.play().catch(() => {});
     }
-  };
+    // Untuk YT yang belum ready, play akan terjadi di onReady callback
+  }, [ytReady, isYT, musicUrl, playMusic]);
 
-  const toggleMute = () => {
-    if (audioRef.current) {
-      if (isMuted) {
-        audioRef.current.play().catch(() => {});
-      } else {
-        audioRef.current.pause();
-      }
-      setIsMuted(!isMuted);
+  // Toggle music play/pause
+  const toggleMute = useCallback(() => {
+    if (isMuted) {
+      playMusic();
+    } else {
+      pauseMusic();
     }
-  };
+  }, [isMuted, playMusic, pauseMusic]);
 
   const handleAddComment = async () => {
     if (!commentName.trim() || !commentMsg.trim()) return;
@@ -208,7 +305,8 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#E8E8E8', color: '#1F1C1D' }}>
       {/* Audio */}
-      <audio ref={audioRef} loop src={data.music.url} className="hidden" />
+      {!isYT && <audio ref={audioRef} loop src={musicUrl} className="hidden" />}
+      {isYT && <div ref={ytContainerRef} className="hidden" />}
 
       {/* Music Toggle Button */}
       {isOpen && (
