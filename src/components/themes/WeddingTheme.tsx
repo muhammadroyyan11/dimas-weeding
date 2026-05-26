@@ -144,6 +144,17 @@ export default function WeddingTheme({ data, comments, gallery, guestName }: The
 
   const handleOpen = () => {
     setIsOpen(true);
+    setIsMuted(false);
+
+    // Request fullscreen
+    const el = document.documentElement;
+    if (el.requestFullscreen) {
+      el.requestFullscreen().catch(() => {});
+    } else if ((el as any).webkitRequestFullscreen) {
+      (el as any).webkitRequestFullscreen();
+    }
+
+    // Play music
     if (audioRef.current && data.music.url) {
       audioRef.current.play().catch(() => {});
     }
